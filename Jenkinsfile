@@ -22,9 +22,9 @@ pipeline {
             }
         }
 
-        stage('Run docker-compose') {
+        stage('Run docker compose') {
             steps {
-                sh 'docker-compose up -d'
+                sh 'docker compose up -d'
             }
         }
 
