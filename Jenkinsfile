@@ -43,7 +43,7 @@ pipeline {
     post {
         always {
             echo 'Cleaning up...'
-            sh 'docker-compose down'  // Always stop containers after build
+            sh 'docker compose down'  // Always stop containers after build
             sh "docker rmi ${DOCKER_IMAGE}:${DOCKER_TAG}"  // Remove local image
         }
     }
