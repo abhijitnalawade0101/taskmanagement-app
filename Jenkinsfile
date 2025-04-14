@@ -33,8 +33,8 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
                     script {
                         sh "echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin"
-                        sh "docker tag taskmanagement-app-image:latest $DOCKER_HUB_USERNAME/taskmanagement-app-image:$DOCKER_TAG"
-                        sh "docker push $DOCKER_HUB_USERNAME/taskmanagement-app-image:$DOCKER_TAG"
+                        sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} \$DOCKER_HUB_USERNAME/${DOCKER_IMAGE}:${DOCKER_TAG}"
+                        sh "docker push \$DOCKER_HUB_USERNAME/${DOCKER_IMAGE}:${DOCKER_TAG}"
                     }
                 }
             }
