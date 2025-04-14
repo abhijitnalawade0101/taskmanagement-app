@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'abhijeet820/project-taskmanagement-app'
+        DOCKER_IMAGE = 'taskmanagement-app-image'
         DOCKER_TAG = 'latest'
-        DOCKER_CREDENTIALS_ID = 'docker-hub-login'  // This must match the ID you used in Jenkins
     }
 
     stages {
@@ -20,32 +19,6 @@ pipeline {
                     dockerImage = docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
                 }
             }
-        }
-
-        stage('Run docker compose') {
-            steps {
-                sh 'docker compose up -d'
-            }
-        }
-
-        stage('Push to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
-                    script {
-                        sh "echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin"
-                        sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} \$DOCKER_HUB_USERNAME/${DOCKER_IMAGE}:${DOCKER_TAG}"
-                        sh "docker push \$DOCKER_HUB_USERNAME/${DOCKER_IMAGE}:${DOCKER_TAG}"
-                    }
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            echo 'Cleaning up...'
-            sh 'docker compose down'  // Always stop containers after build
-            sh "docker rmi ${DOCKER_IMAGE}:${DOCKER_TAG}"  // Remove local image
         }
     }
 }
